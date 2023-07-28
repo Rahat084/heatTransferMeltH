@@ -141,10 +141,4 @@ forAll(mesh.boundaryMesh()[patchi], facei)
     h.boundaryFieldRef()[patchi][facei] = calcH( T0, Tmelt, deltaT, CpS, CpL, hf, alphaLiq, Cp);
 }
 }
-/*
-else 
-{
-h.boundaryFieldRef().set(patchi, T.boundaryField()[patchi]);
-}
-*/
 }
