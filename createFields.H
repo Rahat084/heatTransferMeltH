@@ -113,11 +113,11 @@ volScalarField h
         "h",
         runTime.timeName(),
         mesh,
-        IOobject::MUST_READ,
+        IOobject::NO_READ,
         IOobject::AUTO_WRITE
     ),
-    mesh
-//    ,dimensionedScalar("h",dimensionSet(0,2,-2,0,0,0,0), 0.0)
+    mesh,
+    dimensionedScalar("h",dimensionSet(0,2,-2,0,0,0,0), 0.0)
 );
 
 Info<< "Updating initial Enthalpy h \n" << endl;
@@ -130,10 +130,9 @@ forAll(cells_, celli)
         T0 = T[celli];
 	h[celli] = calcH( T0, Tmelt, deltaT, CpS, CpL, hf, alphaLiq, Cp); 
 }
-//label patchID = mesh.boundaryMesh().findPatchID("heatingWall");
-//const polyPatch& cPatch = mesh.boundaryMesh()[patchID];
 forAll(T.boundaryField(), patchi)
 {
+h.boundaryFieldRef().set(patchi, T.boundaryField()[patchi]);
     if (isA<fixedValueFvPatchScalarField>(T.boundaryField()[patchi]))
 	    {
 forAll(mesh.boundaryMesh()[patchi], facei)
@@ -142,4 +141,10 @@ forAll(mesh.boundaryMesh()[patchi], facei)
     h.boundaryFieldRef()[patchi][facei] = calcH( T0, Tmelt, deltaT, CpS, CpL, hf, alphaLiq, Cp);
 }
 }
+/*
+else 
+{
+h.boundaryFieldRef().set(patchi, T.boundaryField()[patchi]);
+}
+*/
 }
